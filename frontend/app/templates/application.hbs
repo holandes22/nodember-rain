@@ -1,0 +1,15 @@
+<nav class="navbar navbar-inverse navbar-static-top" role="navigation">
+  <div class="navbar-header">
+    {{link-to "Nodember rain" "index" class="navbar-brand"}}
+  </div>
+  <div>
+    <ul class="nav navbar-nav">
+      <li>{{link-to "All messages" "messages"}}</li>
+      <li>{{link-to "Last message" "last"}}</li>
+      <li>{{link-to "Weather" "weather"}}</li>
+    </ul>
+  </div>
+</nav>
+<div class="container-fluid">
+{{outlet}}
+</div>

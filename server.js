@@ -2,19 +2,18 @@ var RSVP = require('rsvp');
 var request = require('request');
 var express = require('express');
 
-var githubStatusAPIClient = {
+var githubStatusAPIClient = module.exports =  {
 
   get: function(path) {
 
     return new RSVP.Promise(function(resolve, reject){
 
       var url = 'https://status.github.com/api/' + path + '.json';
-      request(url, function (error, response, body) {
-        console.log('Got response: ', response.toJSON());
+      request({url: url, json: true}, function (error, response, body) {
         if (!error && response.statusCode == 200) {
           resolve(response.body);
         } else {
-          reject({'detail': error});
+          reject({'detail': response.body});
         }
       });
 
@@ -58,4 +57,6 @@ app.get('/api/messages/current-status', function(request, response) {
   resolvePromise(response, 'getCurrentStatus');
 });
 
-app.listen(3000);
+if (!module.parent) {
+  app.listen(3000);
+}

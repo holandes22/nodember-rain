@@ -4,7 +4,7 @@
   "description": "Playing around with node and ember",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "qunit -c ./server.js -t ./tests.js"
   },
   "repository": {
     "type": "git",
@@ -20,5 +20,10 @@
     "express": "^4.11.1",
     "request": "^2.51.0",
     "rsvp": "^3.0.16"
+  },
+  "devDependencies": {
+    "express-mock-request": "0.0.2",
+    "nock": "^0.57.0",
+    "qunit": "^0.7.5"
   }
 }

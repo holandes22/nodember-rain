@@ -1,6 +1,7 @@
 var testrunner = require("qunit");
 var nock = require('nock');
-var app = require('./server');
+var deepcopy = require('deepcopy');
+var client = require('./github-client');
 
 
 testrunner.setup({
@@ -39,17 +40,18 @@ var currentStatus = {
 
 var api = nock('https://status.github.com');
 
-test("it exists", function () {
-  ok(app);
-});
 
 asyncTest('get all messages', function (assert) {
   expect(1);
   api
     .get('/api/messages.json')
     .reply(200, messages);
-  app.getAllMessages().then(function(json) {
-    assert.deepEqual(json, messages, "messages is as expected");
+  client.getAllMessages().then(function(json) {
+    var deep = deepcopy(messages);
+    deep[0].id = 1;
+    deep[1].id = 2;
+    expected = { message: deep };
+    assert.deepEqual(json, expected, "messages is as expected");
     start();
   });
 });
@@ -60,8 +62,11 @@ test('get last message', function () {
   api
     .get('/api/last-message.json')
     .reply(200, lastMessage);
-  app.getLastMessage().then(function(json) {
-    assert.deepEqual(json, lastMessage, "last message is as expected");
+  client.getLastMessage().then(function(json) {
+    var deep = deepcopy(lastMessage);
+    deep.id = 'last';
+    expected = { message: deep };
+    assert.deepEqual(json, expected, "last message is as expected");
     start();
   });
 });
@@ -72,8 +77,11 @@ test('get current status', function () {
   api
     .get('/api/status.json')
     .reply(200, currentStatus);
-  app.getCurrentStatus().then(function(json) {
-    assert.deepEqual(json, currentStatus, "status is as expected");
+  client.getCurrentStatus().then(function(json) {
+    var deep = deepcopy(currentStatus);
+    deep.id = 'current-status';
+    expected = { message: deep };
+    assert.deepEqual(json, expected, "status is as expected");
     start();
   });
 });
@@ -84,7 +92,7 @@ asyncTest('get all messages failure', function (assert) {
   api
     .get('/api/messages.json')
     .reply(500, { error: 'foo' });
-  app.getAllMessages().then(function(json) {
+  client.getAllMessages().then(function(json) {
   }, function(error){
     expected = { detail: { error: 'foo' } };
     assert.deepEqual(error, expected, "messages error is as expected");

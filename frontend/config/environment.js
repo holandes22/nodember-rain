@@ -41,7 +41,7 @@ module.exports = function(environment) {
   }
 
   if (environment === 'production') {
-    ENV.APP.API_HOST = 'https://example.com';
+    ENV.APP.API_HOST = 'https://lit-lake-9201.herokuapp.com';
   }
 
   return ENV;
